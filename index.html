@@ -33,13 +33,6 @@
     }
   </script>
   <style>
-    :root {
-      --bg-obsidian: #0B070E;
-      --bg-velvet: #160F1D;
-      --accent-gold: #D4AF37;
-      --accent-blush: #E8A5B8;
-    }
-
     body {
       background-color: #0B070E;
       color: #F9F5F6;
@@ -65,24 +58,15 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* Candle Flame Animation */
     @keyframes flicker {
       0%, 100% {
         transform: translateX(-50%) scale(1) rotate(-1deg);
         opacity: 0.95;
         filter: drop-shadow(0 0 18px rgba(255, 195, 75, 0.95)) drop-shadow(0 0 38px rgba(232, 165, 184, 0.6));
       }
-      25% {
-        transform: translateX(-50%) scale(1.05, 0.96) rotate(1.5deg);
-        opacity: 1;
-      }
       50% {
         transform: translateX(-50%) scale(0.96, 1.06) rotate(-2deg);
         opacity: 0.9;
-      }
-      75% {
-        transform: translateX(-50%) scale(1.03, 0.98) rotate(1deg);
-        opacity: 0.98;
       }
     }
 
@@ -92,21 +76,14 @@
     }
 
     @keyframes smokeRise {
-      0% {
-        opacity: 0.85;
-        transform: translate(-50%, 0) scale(0.8);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -65px) scale(2.2);
-      }
+      0% { opacity: 0.85; transform: translate(-50%, 0) scale(0.8); }
+      100% { opacity: 0; transform: translate(-50%, -65px) scale(2.2); }
     }
 
     .smoke-particle {
       animation: smokeRise 2.2s forwards ease-out;
     }
 
-    /* Polaroid Styling */
     .polaroid-card {
       background: linear-gradient(180deg, #FDFBF7 0%, #F3EDE2 100%);
       color: #1B1321;
@@ -118,7 +95,6 @@
 
     .polaroid-card:hover {
       transform: translateY(-10px) rotate(0deg) scale(1.02) !important;
-      box-shadow: 0 28px 55px rgba(212, 175, 55, 0.22), 0 10px 25px rgba(0,0,0,0.65);
       z-index: 20;
     }
 
@@ -127,44 +103,19 @@
       transition: transform 0.35s ease, box-shadow 0.35s ease;
     }
 
-    .envelope-seal:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 40px rgba(212, 175, 55, 0.7), inset 0 2px 6px rgba(255,255,255,0.5);
-    }
-
-    /* Chat Bubble Vibe */
     .chat-pill {
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(232, 165, 184, 0.2);
-      transition: all 0.3s ease;
-    }
-    .chat-pill:hover {
-      border-color: rgba(212, 175, 55, 0.45);
-      background: rgba(255, 255, 255, 0.06);
-      transform: translateY(-3px);
-    }
-
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0B070E;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #352347;
-      border-radius: 9999px;
     }
   </style>
 </head>
 <body class="min-h-screen selection:bg-blush/30 selection:text-champagne relative">
 
-  <!-- Background Starlight & Confetti Canvas -->
   <canvas id="starCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
   <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-40"></canvas>
 
   <!-- ==================== LOCK / ENTRANCE GATE OVERLAY ==================== -->
-  <div id="entranceGate" class="fixed inset-0 z-50 flex flex-col items-center justify-center px-6 text-center transition-all duration-1000 bg-obsidian/95 backdrop-blur-2xl">
+  <div id="entranceGate" class="fixed inset-0 z-50 flex flex-col items-center justify-center px-6 text-center transition-all duration-700 bg-obsidian/95 backdrop-blur-2xl">
     <div class="max-w-md w-full glass-card rounded-3xl p-8 md:p-10 relative overflow-hidden border border-champagne/20">
       <div class="w-16 h-16 mx-auto mb-5 rounded-full bg-gradient-to-br from-blush/30 via-gold/20 to-plum flex items-center justify-center border border-champagne/30 shadow-lg">
         <span class="text-2xl">💤🩷</span>
@@ -176,7 +127,7 @@
       <p class="text-sm text-muted leading-relaxed mb-7">
         Udah jam 12 lewat nih syaang. Aku bikin sesuatu kecil-kecilan buat ulang tahun kamu malam ini. Baca pelan-pelan bae ya, nda usah buru-buru.
       </p>
-      <button id="enterExperienceBtn" class="w-full py-4 px-7 rounded-full bg-gradient-to-r from-gold via-champagne to-blush text-obsidian font-semibold text-sm tracking-wide shadow-[0_0_30px_rgba(212,175,55,0.4)] hover:shadow-[0_0_45px_rgba(232,165,184,0.65)] transition-all duration-300 active:scale-95 flex items-center justify-center gap-2">
+      <button id="enterExperienceBtn" onclick="unlockGateNow()" type="button" class="w-full py-4 px-7 rounded-full bg-gradient-to-r from-gold via-champagne to-blush text-obsidian font-semibold text-sm tracking-wide shadow-[0_0_30px_rgba(212,175,55,0.4)] active:scale-95 flex items-center justify-center gap-2 cursor-pointer">
         <span>✨ Buka Sekarang Ya Sayang</span>
       </button>
       <p class="text-[11px] text-muted/60 mt-4 font-mono">Dari <span data-bind="senderName">Muzaki</span> • 27 Oktober</p>
@@ -186,14 +137,12 @@
   <!-- ==================== FLOATING TOP BAR ==================== -->
   <header class="fixed top-4 left-0 right-0 z-30 px-4 md:px-8 pointer-events-none">
     <div class="max-w-5xl mx-auto flex items-center justify-between">
-      <!-- Secret Triple-Tap Badge to Re-open Editor -->
-      <div id="secretUnlockTrigger" title="Ketuk 3x untuk membuka Edit Cepat" class="pointer-events-auto cursor-pointer select-none glass-card px-4 py-2 rounded-full flex items-center gap-2.5 border border-champagne/15 hover:border-champagne/35 transition">
+      <div id="secretUnlockTrigger" onclick="handleSecretTap()" class="pointer-events-auto cursor-pointer select-none glass-card px-4 py-2 rounded-full flex items-center gap-2.5 border border-champagne/15">
         <span class="w-2 h-2 rounded-full bg-blush animate-pulse"></span>
         <span class="font-mono text-xs tracking-wider text-champagne/90">00:00 • <span data-bind="partnerName">Nazz</span>💤🩷</span>
       </div>
 
-      <!-- Ambient Music / Melodi Button -->
-      <button id="audioToggleBtn" class="pointer-events-auto glass-card px-4 py-2 rounded-full flex items-center gap-2 text-xs font-medium text-silk hover:border-gold/50 transition">
+      <button id="audioToggleBtn" onclick="toggleMusicNow()" type="button" class="pointer-events-auto glass-card px-4 py-2 rounded-full flex items-center gap-2 text-xs font-medium text-silk">
         <span id="audioIcon" class="text-gold">♪</span>
         <span id="audioLabel">Musik: Nyala</span>
       </button>
@@ -202,7 +151,7 @@
 
   <!-- ==================== FLOATING QUICK CUSTOMIZER BUTTON ==================== -->
   <div id="editorFabContainer" class="fixed bottom-5 left-5 z-40 flex items-center gap-2">
-    <button id="openEditorBtn" class="px-4 py-2.5 rounded-full bg-plum/95 hover:bg-rosewood text-champagne border border-gold/40 shadow-2xl text-xs font-medium flex items-center gap-2 backdrop-blur-md transition-all hover:scale-105">
+    <button id="openEditorBtn" onclick="openEditorModal()" type="button" class="px-4 py-2.5 rounded-full bg-plum/95 text-champagne border border-gold/40 shadow-2xl text-xs font-medium flex items-center gap-2 backdrop-blur-md">
       <span>⚙️ Edit Cepat (Foto & Teks)</span>
     </button>
   </div>
@@ -210,7 +159,7 @@
   <!-- ==================== MAIN CONTENT ==================== -->
   <main class="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 pt-28 pb-28 space-y-24 md:space-y-32">
 
-    <!-- 1. HERO & MIDNIGHT COUNTDOWN / CELEBRATION -->
+    <!-- 1. HERO -->
     <section class="text-center max-w-3xl mx-auto pt-4">
       <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card border border-blush/30 text-blush text-xs font-mono uppercase tracking-[0.2em] mb-6">
         <span>✦ Selamat Ulang Tahun Syaang ✦</span>
@@ -225,14 +174,116 @@
         Selamat bertambah usia ya manis aku. Makasih udah bertahan sejauh ini, udah mau diajak bangun semuanya pelan-pelan dari bawah sampe kita udah mau 2 tahun.
       </p>
 
-      <!-- Live Countdown / Midnight Status Card -->
       <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-xl mx-auto border border-champagne/20 relative overflow-hidden">
         <p id="countdownHeading" class="font-mono text-[11px] uppercase tracking-[0.25em] text-champagne/75 mb-4">
-          Waktu Menuju Detik Ulang Tahunmu
+          ✨ Jam 00:00 Sudah Tiba • Selamat Ulang Tahun Nazz ✨
         </p>
 
-        <div id="countdownGrid" class="grid grid-cols-4 gap-3 sm:gap-4 text-center">
+        <div class="grid grid-cols-4 gap-3 sm:gap-4 text-center">
           <div class="bg-obsidian/60 rounded-2xl py-3.5 px-2 border border-white/5">
+            <div id="cdHours" class="font-mono text-2xl sm:text-3xl font-semibold text-champagne">00</div>
+            <div class="text-[10px] font-mono uppercase tracking-widest text-muted mt-1">Jam</div>
+          </div>
+          <div class="bg-obsidian/60 rounded-2xl py-3.5 px-2 border border-white/5">
+            <div id="cdMinutes" class="font-mono text-2xl sm:text-3xl font-semibold text-champagne">00</div>
+            <div class="text-[10px] font-mono uppercase tracking-widest text-muted mt-1">Menit</div>
+          </div>
+          <div class="bg-obsidian/60 rounded-2xl py-3.5 px-2 border border-white/5">
+            <div id="cdSeconds" class="font-mono text-2xl sm:text-3xl font-semibold text-blush">00</div>
+            <div class="text-[10px] font-mono uppercase tracking-widest text-muted mt-1">Detik</div>
+          </div>
+          <div class="bg-obsidian/60 rounded-2xl py-3.5 px-2 border border-white/5">
+            <div class="font-mono text-2xl sm:text-3xl font-semibold text-gold">≈2Th</div>
+            <div class="text-[10px] font-mono uppercase tracking-widest text-muted mt-1">Bareng</div>
+          </div>
+        </div>
+
+        <div class="mt-4 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-champagne/90">
+          <span id="midnightStatusText">✨ Doa terbaik buat Ayuk di umur yang baru ini</span>
+          <button onclick="launchConfetti(90)" type="button" class="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-champagne font-mono text-[11px]">
+            🎉 Rayakan
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. INTERACTIVE CANDLE RITUAL -->
+    <section id="candleSection" class="max-w-2xl mx-auto text-center">
+      <div class="glass-card rounded-3xl p-8 sm:p-12 border border-champagne/20 relative overflow-hidden">
+        <div class="inline-block font-mono text-xs uppercase tracking-[0.22em] text-gold mb-2">Doa Tengah Malam</div>
+        <h3 class="font-serif text-3xl sm:text-4xl text-silk mb-3">Sebutin Harapan Kamu Dulu, Syaang</h3>
+        <p class="text-sm text-muted max-w-md mx-auto leading-relaxed mb-10">
+          Sebelum lanjut baca ke bawah, doa dulu dalam hati buat umur baru kamu, buat kelancaran rezeki & masa depan kita juga. Kalo udah, <span class="text-champagne font-medium">ketuk api lilinnya</span> ya yang.
+        </p>
+
+        <div class="relative h-64 flex flex-col items-center justify-end my-4 select-none">
+          <div id="candleHalo" class="w-44 h-44 rounded-full bg-amber-400/20 blur-2xl absolute top-2 transition-opacity duration-700 pointer-events-none"></div>
+
+          <div id="candleTrigger" onclick="blowCandleNow()" class="relative flex flex-col items-center cursor-pointer group">
+            <div id="smokeContainer" class="relative w-8 h-12 pointer-events-none"></div>
+
+            <div id="candleFlame" class="candle-flame w-9 h-14 relative -mb-1 transition-all duration-500">
+              <div class="w-9 h-14 rounded-full bg-gradient-to-t from-amber-500 via-yellow-300 to-white" style="border-radius: 50% 50% 35% 35% / 60% 60% 40% 40%;"></div>
+              <div class="w-4 h-7 bg-blue-400/50 rounded-full absolute bottom-1 left-1/2 -translate-x-1/2 blur-[1px]"></div>
+            </div>
+
+            <div class="w-1 h-3.5 bg-stone-700 rounded-t"></div>
+
+            <div class="w-20 h-32 rounded-t-xl rounded-b-lg bg-gradient-to-b from-[#FDFBF7] via-[#F4E8C1] to-[#D5C39A] shadow-inner relative border border-white/40 flex items-center justify-center">
+              <div class="w-full h-3 bg-white/60 rounded-full absolute top-0 blur-[1px]"></div>
+              <span class="font-serif italic text-obsidian/70 text-sm tracking-widest">Nazz</span>
+            </div>
+
+            <div class="w-32 h-3.5 rounded-full bg-gradient-to-r from-gold/50 via-champagne to-gold/50 shadow-lg"></div>
+          </div>
+        </div>
+
+        <div id="wishGrantedBox" class="hidden mt-6 p-5 rounded-2xl bg-gradient-to-r from-rosewood/30 via-plum/60 to-rosewood/30 border border-blush/30">
+          <p class="font-serif italic text-xl text-champagne mb-1">
+            "Aamiin paling serius buat semua doa Ayuk malam ini."
+          </p>
+          <p class="text-xs text-muted">
+            Semoga tahun ini semua urusan kita dilancarin satu-satu ya syaang. <button onclick="relightCandleNow()" type="button" class="underline text-blush ml-1">Nyalain lagi lilinnya</button>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. LITTLE NOTES IN MUZAKI'S REAL STYLE -->
+    <section class="max-w-4xl mx-auto">
+      <div class="text-center mb-10">
+        <p class="font-mono text-xs uppercase tracking-[0.25em] text-blush mb-2">Catatan Kecil Buat Ayuk</p>
+        <h3 class="font-serif text-3xl sm:text-4xl text-silk">Pegang Omongan Aku Ini Ya Syaang</h3>
+        <p class="text-sm text-muted mt-2">Biar kapanpun kamu lagi capek atau mikir macem-macem, kamu inget tiga hal ini</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="chat-pill rounded-3xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full bg-blush/15 text-blush font-mono text-[11px]">#1 Soal Kita</span>
+              <span class="text-lg">🤍</span>
+            </div>
+            <h4 class="font-serif text-2xl text-champagne mb-2">Bangun Pelan-Pelan Dari Bawah</h4>
+            <p class="text-sm text-silk/85 leading-relaxed">
+              Kita udah mau 2 tahun loh yang. Susah-susah kita bangun hubungan ini dari bawah. Kalo ada apa-apa, tanyain aja yang bener, omongin baik-baik. Nda usah takut aku marah, pasti aku jawab dan dengerin kok.
+            </p>
+          </div>
+          <p class="font-mono text-[11px] text-gold/80 mt-5 pt-3 border-t border-white/10">
+            "Yok benerin terus komunikasinya ya syaang"
+          </p>
+        </div>
+
+        <div class="chat-pill rounded-3xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="px-3 py-1 rounded-full bg-gold/15 text-champagne font-mono text-[11px]">#2 Pejuang Masa Depan</span>
+              <span class="text-lg">🏥</span>
+            </div>
+            <h4 class="font-serif text-2xl text-champagne mb-2">Komit & Saling Ngertiin</h4>
+            <p class="text-sm text-silk/85 leading-relaxed">
+              Makasih ya selalu antusias nemenin aku pantengin loker RS, nanyain udah kirim CV ke mana aja. Mau nanti jalannya harus LDR dulu, kita udah sepakat mau komit kan
+v class="bg-obsidian/60 rounded-2xl py-3.5 px-2 border border-white/5">
             <div id="cdHours" class="font-mono text-2xl sm:text-3xl font-semibold text-champagne">00</div>
             <div class="text-[10px] font-mono uppercase tracking-widest text-muted mt-1">Jam</div>
           </div>
