@@ -376,5 +376,517 @@
     </div>
   </div>
 
-  <!-- EDITOR MODAL -->
-  <div id="editorModal" class="fixed inset-0 z-50 hidden items-center justify-cent
+<!-- EDITOR MODAL -->
+  <div id="editorModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-obsidian/85 backdrop-blur-xl p-4 overflow-y-auto">
+    <div class="glass-card max-w-2xl w-full rounded-3xl p-6 sm:p-8 border border-gold/30 my-8 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-white/10 pb-4 mb-6">
+        <div>
+          <span class="font-mono text-[11px] uppercase tracking-widest text-gold">Pengaturan Instan</span>
+          <h3 class="font-serif text-2xl text-silk">Atur Foto & Isi Pesan</h3>
+        </div>
+        <button onclick="closeEditorModalNow()" type="button" class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm cursor-pointer">✕</button>
+      </div>
+
+      <div class="space-y-5 text-sm">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-mono uppercase text-champagne/80 mb-1.5">Panggilan Pacar</label>
+            <input id="inputPartnerName" type="text" class="w-full px-4 py-2.5 rounded-xl bg-obsidian/80 border border-white/15 text-silk" />
+          </div>
+          <div>
+            <label class="block text-xs font-mono uppercase text-champagne/80 mb-1.5">Nama Kamu</label>
+            <input id="inputSenderName" type="text" class="w-full px-4 py-2.5 rounded-xl bg-obsidian/80 border border-white/15 text-silk" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-mono uppercase text-champagne/80 mb-1.5">Kalimat Pembuka</label>
+          <input id="inputHeroSubtitle" type="text" class="w-full px-4 py-2.5 rounded-xl bg-obsidian/80 border border-white/15 text-silk" />
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs font-mono uppercase text-champagne/80">Pilih Template Surat</label>
+            <div class="flex gap-1.5">
+              <button type="button" onclick="selectTemplate(0)" class="px-2.5 py-1 rounded bg-white/10 text-[11px] text-champagne cursor-pointer">Tulus & Dalam</button>
+              <button type="button" onclick="selectTemplate(1)" class="px-2.5 py-1 rounded bg-white/10 text-[11px] text-champagne cursor-pointer">Santai & Hangat</button>
+              <button type="button" onclick="selectTemplate(2)" class="px-2.5 py-1 rounded bg-white/10 text-[11px] text-champagne cursor-pointer">Semangat LDR</button>
+            </div>
+          </div>
+          <textarea id="inputLetterBody" rows="6" class="w-full px-4 py-3 rounded-xl bg-obsidian/80 border border-white/15 text-silk leading-relaxed"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs font-mono uppercase text-champagne/80 mb-2">4 Foto Kenangan Kalian</label>
+          <div id="editorPhotosContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+        </div>
+
+        <div class="pt-4 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
+          <button onclick="resetDefaultNow()" type="button" class="px-4 py-2.5 rounded-xl bg-white/5 text-xs text-muted cursor-pointer">
+            Reset Semula
+          </button>
+          <div class="flex flex-wrap gap-2.5">
+            <button onclick="applyEditorChanges(false)" type="button" class="px-5 py-2.5 rounded-xl bg-white/15 text-xs font-semibold text-silk cursor-pointer">
+              Simpan Perubahan
+            </button>
+            <button onclick="applyEditorChanges(true)" type="button" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-gold to-blush text-obsidian text-xs font-semibold shadow-lg cursor-pointer">
+              🔒 Simpan & Sembunyikan Edit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'midnight_birthday_nazz_muzaki_v4';
+
+    function cloneObj(obj) {
+      return JSON.parse(JSON.stringify(obj));
+    }
+
+    const LETTER_TEMPLATES = [
+      "Selamat ulang tahun ya sayang, manis aku.\n\nTidak terasa kita sudah mau 2 tahun menjalani semuanya bersama-sama. Kita berjuang bersama dari bawah pelan-pelan. Terima kasih ya, sudah sabar sama aku, sudah mau terus belajar saling mengerti, dan selalu ada buat aku sampai hari ini.\n\nDi umur kamu yang baru ini, kurang-kurangin ya overthinking atau berpikir yang tidak-tidak sendiri. Kalau ada yang mengganjal, tanyakan saja yang benar ke aku, pasti aku jawab kok. Kita perbaiki terus komunikasi kita, dan biasakan untuk saling percaya.\n\nApalagi ke depannya kita mau LDR dan berkomitmen, sambil aku juga terus berusaha mencari pekerjaan terbaik di rumah sakit untuk masa depan kita. Doakan aku terus ya, aku juga selalu mendoakan yang terbaik untukmu.\n\nTetap jadi Nazz manis aku yang seru, yang suka tiba-tiba malu sendiri waktu teleponan, yang rebutan Pororo sama meminjam Tab untuk Block Blast. Selamat ulang tahun ya sayang, aku sangat menyayangimu.",
+      "Happy birthday ya sayang, manis aku!\n\nSelamat bertambah usia ya. Semoga di umur yang baru ini kamu sehat selalu, semakin lancar segala urusannya, semakin disayangi Ayah dan Ibu, dan pastinya semakin sayang sama aku.\n\nJujur aku sangat bersyukur punya kamu. Walaupun kadang ada saja salah paham kecil, tapi ujung-ujungnya kita selalu bisa membicarakannya dengan baik lagi. Terima kasih sudah jadi partner paling seru, dari menemani memantau lowongan rumah sakit sampai urusan pinjam Tab main Block Blast.\n\nPokoknya jangan sering-sering cemburu atau berprasangka buruk lagi ya sayang. Apapun yang kita lewati ke depan, kita hadapi bersama ya!",
+      "Selamat ulang tahun ya sayangku, Ayuk.\n\nMalam ini tepat jam 12, aku cuma mau bilang terima kasih banyak karena kamu sudah hadir dan bertahan bersama aku sampai kita mau 2 tahun ini. Banyak hal yang sudah kita lewati dari bawah, dan aku bangga sama kita.\n\nSekarang kita masuk fase baru, aku sedang berjuang melamar pekerjaan di rumah sakit dan kita juga bersiap untuk LDR. Aku tahu ini tidak mudah, tapi selama kita sama-sama komitmen, saling menjaga kepercayaan, dan berbicara dengan baik, kita pasti bisa melewatinya.\n\nSemoga semua doa baikmu malam ini dikabulkan satu-persatu ya sayang. Sabar ya manisku, perlahan kita wujudkan semuanya bersama."
+    ];
+
+    const DEFAULT_STATE = {
+      partnerName: 'Nazz',
+      senderName: 'Muzaki',
+      heroSubtitle: 'Selamat bertambah usia ya manis aku. Terima kasih sudah bertahan sejauh ini, sudah mau diajak berjuang bersama dari bawah sampai kita sudah hampir 2 tahun.',
+      letterBody: LETTER_TEMPLATES[0],
+      editorHidden: false,
+      memories: [
+        {
+          url: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&w=900&q=80',
+          caption: 'Berjuang dari bawah sampai hampir 2 tahun bersama 🤍',
+          date: 'Perjalanan Kita',
+          rotation: '-2.5deg'
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=900&q=80',
+          caption: 'Partner setia memantau lowongan RS & pejuang masa depan',
+          date: 'Komitmen Bersama',
+          rotation: '2deg'
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=900&q=80',
+          caption: 'Tim pinjam Tab main Block Blast & Pororo sebelum tidur 🐧',
+          date: 'Favorit Aku',
+          rotation: '-1.8deg'
+        },
+        {
+          url: 'https://images.unsplash.com/photo-1494774157365-9e04c6720e47?auto=format&fit=crop&w=900&q=80',
+          caption: 'Kurangi overthinking-nya ya manis aku, semuanya pasti baik ✨',
+          date: '27 Oktober',
+          rotation: '2.4deg'
+        }
+      ]
+    };
+
+    let appState = loadState();
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return cloneObj(DEFAULT_STATE);
+        const parsed = JSON.parse(raw);
+        return Object.assign(cloneObj(DEFAULT_STATE), parsed, {
+          memories: parsed.memories && parsed.memories.length === 4 ? parsed.memories : cloneObj(DEFAULT_STATE.memories)
+        });
+      } catch (e) {
+        return cloneObj(DEFAULT_STATE);
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      } catch (e) {}
+    }
+
+    function unlockGateNow() {
+      const gate = document.getElementById('entranceGate');
+      if (gate) {
+        gate.style.opacity = '0';
+        gate.style.pointerEvents = 'none';
+        setTimeout(function() {
+          gate.style.display = 'none';
+        }, 500);
+      }
+      try { startMusicLoop(); } catch (e) {}
+      try { launchConfetti(85); } catch (e) {}
+    }
+
+    function renderAll() {
+      document.querySelectorAll('[data-bind="partnerName"]').forEach(function(el) {
+        el.textContent = appState.partnerName || 'Nazz';
+      });
+      document.querySelectorAll('[data-bind="senderName"]').forEach(function(el) {
+        el.textContent = appState.senderName || 'Muzaki';
+      });
+      const subEl = document.querySelector('[data-bind="heroSubtitle"]');
+      if (subEl) subEl.textContent = appState.heroSubtitle;
+
+      const fab = document.getElementById('editorFabContainer');
+      if (appState.editorHidden) {
+        fab.classList.add('hidden');
+      } else {
+        fab.classList.remove('hidden');
+      }
+
+      renderPolaroids();
+    }
+
+    function renderPolaroids() {
+      const grid = document.getElementById('polaroidGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      appState.memories.forEach(function(mem, idx) {
+        const card = document.createElement('div');
+        card.className = 'polaroid-card cursor-pointer group';
+        card.style.transform = 'rotate(' + (mem.rotation || '0deg') + ')';
+        card.innerHTML = '<div class="aspect-[4/5] w-full overflow-hidden rounded-sm bg-stone-200 mb-3.5 relative">' +
+          '<img src="' + mem.url + '" alt="Kenangan" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />' +
+          '</div>' +
+          '<p class="font-serif italic text-lg text-stone-800 text-center leading-snug px-1">' + mem.caption + '</p>' +
+          '<p class="font-mono text-[10px] uppercase tracking-widest text-stone-500 text-center mt-1">' + (mem.date || ('Momen #' + (idx + 1))) + '</p>';
+        card.onclick = function() { openLightbox(mem); };
+        grid.appendChild(card);
+      });
+    }
+
+    function openLightbox(mem) {
+      const modal = document.getElementById('lightboxModal');
+      document.getElementById('lightboxImg').src = mem.url;
+      document.getElementById('lightboxCaption').textContent = mem.caption;
+      document.getElementById('lightboxDate').textContent = mem.date || '';
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeLightboxNow() {
+      const modal = document.getElementById('lightboxModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function closeLightboxBg(e) {
+      if (e.target.id === 'lightboxModal') closeLightboxNow();
+    }
+
+    // WEB AUDIO API
+    let audioCtx = null;
+    let musicInterval = null;
+    let isMusicPlaying = false;
+
+    const MELODY_NOTES = [
+      { f: 392.00, d: 0.45 }, { f: 392.00, d: 0.45 }, { f: 440.00, d: 0.85 }, { f: 392.00, d: 0.85 }, { f: 523.25, d: 0.85 }, { f: 493.88, d: 1.50 },
+      { f: 392.00, d: 0.45 }, { f: 392.00, d: 0.45 }, { f: 440.00, d: 0.85 }, { f: 392.00, d: 0.85 }, { f: 587.33, d: 0.85 }, { f: 523.25, d: 1.50 },
+      { f: 392.00, d: 0.45 }, { f: 392.00, d: 0.45 }, { f: 783.99, d: 0.85 }, { f: 659.25, d: 0.85 }, { f: 523.25, d: 0.85 }, { f: 493.88, d: 0.85 }, { f: 440.00, d: 1.40 },
+      { f: 698.46, d: 0.45 }, { f: 698.46, d: 0.45 }, { f: 659.25, d: 0.85 }, { f: 523.25, d: 0.85 }, { f: 587.33, d: 0.85 }, { f: 523.25, d: 1.80 }
+    ];
+
+    function playChimeNote(freq, duration) {
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, now);
+      gain.gain.setValueAtTime(0.001, now);
+      gain.gain.exponentialRampToValueAtTime(0.07, now + 0.04);
+      gain.gain.exponentialRampToValueAtTime(0.0008, now + duration + 0.6);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + duration + 0.65);
+    }
+
+    function startMusicLoop() {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+      if (!audioCtx) audioCtx = new AudioContextClass();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      isMusicPlaying = true;
+      updateAudioUI();
+      let noteIndex = 0;
+      clearInterval(musicInterval);
+      musicInterval = setInterval(function() {
+        if (!isMusicPlaying) return;
+        const note = MELODY_NOTES[noteIndex];
+        playChimeNote(note.f, note.d);
+        noteIndex = (noteIndex + 1) % MELODY_NOTES.length;
+      }, 680);
+    }
+
+    function stopMusicLoop() {
+      isMusicPlaying = false;
+      clearInterval(musicInterval);
+      updateAudioUI();
+    }
+
+    function toggleMusicNow() {
+      if (isMusicPlaying) stopMusicLoop();
+      else startMusicLoop();
+    }
+
+    function updateAudioUI() {
+      const label = document.getElementById('audioLabel');
+      const icon = document.getElementById('audioIcon');
+      if (isMusicPlaying) {
+        label.textContent = 'Musik: Nyala';
+        icon.textContent = '♪';
+      } else {
+        label.textContent = 'Musik: Mati';
+        icon.textContent = '✕';
+      }
+    }
+
+    // CANDLE
+    let candleBlown = false;
+    function blowCandleNow() {
+      if (candleBlown) return;
+      candleBlown = true;
+      document.getElementById('candleFlame').classList.add('opacity-0', 'scale-0');
+      document.getElementById('candleHalo').classList.add('opacity-0');
+      const smokeContainer = document.getElementById('smokeContainer');
+      smokeContainer.innerHTML = '';
+      for (let i = 0; i < 4; i++) {
+        const puff = document.createElement('div');
+        puff.className = 'smoke-particle w-4 h-4 rounded-full bg-stone-300/50 blur-sm absolute bottom-0 left-1/2';
+        puff.style.animationDelay = (i * 0.16) + 's';
+        smokeContainer.appendChild(puff);
+      }
+      document.getElementById('wishGrantedBox').classList.remove('hidden');
+      launchConfetti(110);
+    }
+
+    function relightCandleNow() {
+      candleBlown = false;
+      document.getElementById('candleFlame').classList.remove('opacity-0', 'scale-0');
+      document.getElementById('candleHalo').classList.remove('opacity-0');
+      document.getElementById('wishGrantedBox').classList.add('hidden');
+    }
+
+    // LETTER
+    let typewriterTimer = null;
+    function typewriteLetter(text, animate) {
+      const container = document.getElementById('letterBodyContainer');
+      clearInterval(typewriterTimer);
+      if (!animate) {
+        container.textContent = text;
+        return;
+      }
+      container.textContent = '';
+      let idx = 0;
+      typewriterTimer = setInterval(function() {
+        container.textContent += text.charAt(idx);
+        idx++;
+        if (idx >= text.length) clearInterval(typewriterTimer);
+      }, 15);
+    }
+
+    function openLetterNow() {
+      document.getElementById('envelopeLockedCard').classList.add('hidden');
+      document.getElementById('letterContentCard').classList.remove('hidden');
+      typewriteLetter(appState.letterBody, true);
+      launchConfetti(60);
+    }
+
+    function replayTypewriterNow() {
+      typewriteLetter(appState.letterBody, true);
+    }
+
+    // EDITOR
+    function openEditorModal() {
+      document.getElementById('inputPartnerName').value = appState.partnerName;
+      document.getElementById('inputSenderName').value = appState.senderName;
+      document.getElementById('inputHeroSubtitle').value = appState.heroSubtitle;
+      document.getElementById('inputLetterBody').value = appState.letterBody;
+
+      const photosContainer = document.getElementById('editorPhotosContainer');
+      photosContainer.innerHTML = '';
+
+      appState.memories.forEach(function(mem, idx) {
+        const block = document.createElement('div');
+        block.className = 'p-3 rounded-2xl bg-obsidian/60 border border-white/10 space-y-2';
+        block.innerHTML = '<div class="flex items-center gap-3">' +
+          '<img id="previewImg_' + idx + '" src="' + mem.url + '" class="w-12 h-12 rounded-lg object-cover border border-white/20 shrink-0" />' +
+          '<div class="flex-1 min-w-0">' +
+          '<label class="block text-[11px] font-mono text-gold mb-1">Foto #' + (idx + 1) + '</label>' +
+          '<input type="file" accept="image/*" data-photo-idx="' + idx + '" class="photo-file-input text-[11px] text-muted w-full cursor-pointer" />' +
+          '</div></div>' +
+          '<input type="text" id="inputCaption_' + idx + '" value="' + mem.caption + '" class="w-full px-3 py-1.5 rounded-lg bg-obsidian border border-white/10 text-xs text-silk" />';
+        photosContainer.appendChild(block);
+      });
+
+      document.querySelectorAll('.photo-file-input').forEach(function(input) {
+        input.addEventListener('change', handlePhotoUpload);
+      });
+
+      const modal = document.getElementById('editorModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeEditorModalNow() {
+      const modal = document.getElementById('editorModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function selectTemplate(idx) {
+      document.getElementById('inputLetterBody').value = LETTER_TEMPLATES[idx];
+    }
+
+    function handlePhotoUpload(e) {
+      const file = e.target.files[0];
+      const idx = Number(e.target.getAttribute('data-photo-idx'));
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 900;
+          let w = img.width;
+          let h = img.height;
+          if (w > h && w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+          else if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+          appState.memories[idx].url = dataUrl;
+          const preview = document.getElementById('previewImg_' + idx);
+          if (preview) preview.src = dataUrl;
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function applyEditorChanges(hideEditorButton) {
+      appState.partnerName = document.getElementById('inputPartnerName').value.trim() || 'Nazz';
+      appState.senderName = document.getElementById('inputSenderName').value.trim() || 'Muzaki';
+      appState.heroSubtitle = document.getElementById('inputHeroSubtitle').value.trim() || DEFAULT_STATE.heroSubtitle;
+      appState.letterBody = document.getElementById('inputLetterBody').value.trim() || DEFAULT_STATE.letterBody;
+      appState.memories.forEach(function(mem, idx) {
+        const capInput = document.getElementById('inputCaption_' + idx);
+        if (capInput) mem.caption = capInput.value.trim() || mem.caption;
+      });
+      if (hideEditorButton) appState.editorHidden = true;
+      saveState();
+      renderAll();
+      closeEditorModalNow();
+    }
+
+    function resetDefaultNow() {
+      appState = cloneObj(DEFAULT_STATE);
+      saveState();
+      openEditorModal();
+      renderAll();
+    }
+
+    let tapCount = 0;
+    let tapTimer = null;
+    function handleSecretTap() {
+      tapCount++;
+      clearTimeout(tapTimer);
+      if (tapCount >= 3) {
+        tapCount = 0;
+        appState.editorHidden = false;
+        saveState();
+        renderAll();
+        openEditorModal();
+      } else {
+        tapTimer = setTimeout(function() { tapCount = 0; }, 900);
+      }
+    }
+
+    // CANVAS
+    const starCanvas = document.getElementById('starCanvas');
+    const starCtx = starCanvas.getContext('2d');
+    const confettiCanvas = document.getElementById('confettiCanvas');
+    const confettiCtx = confettiCanvas.getContext('2d');
+    let stars = [];
+    let confettiParticles = [];
+
+    function resizeCanvases() {
+      starCanvas.width = window.innerWidth;
+      starCanvas.height = window.innerHeight;
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+      stars = [];
+      const count = Math.min(80, Math.floor(window.innerWidth / 15));
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * starCanvas.width,
+          y: Math.random() * starCanvas.height,
+          r: Math.random() * 1.5 + 0.4,
+          alpha: Math.random() * 0.7 + 0.2,
+          speed: Math.random() * 0.01 + 0.004
+        });
+      }
+    }
+
+    function launchConfetti(amount) {
+      const colors = ['#D4AF37', '#F4E8C1', '#E8A5B8', '#FFF4D9', '#9E4765'];
+      for (let i = 0; i < (amount || 70); i++) {
+        confettiParticles.push({
+          x: window.innerWidth / 2 + (Math.random() - 0.5) * 220,
+          y: window.innerHeight * 0.45,
+          vx: (Math.random() - 0.5) * 8,
+          vy: -(Math.random() * 8 + 4),
+          size: Math.random() * 7 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          vRot: (Math.random() - 0.5) * 8,
+          alpha: 1
+        });
+      }
+    }
+
+    function animateCanvases() {
+      starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
+      for (let i = 0; i < stars.length; i++) {
+        const s = stars[i];
+        s.alpha += s.speed;
+        if (s.alpha > 0.9 || s.alpha < 0.15) s.speed *= -1;
+        starCtx.beginPath();
+        starCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        starCtx.fillStyle = 'rgba(244, 232, 193, ' + s.alpha + ')';
+        starCtx.fill();
+      }
+
+      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      for (let i = confettiParticles.length - 1; i >= 0; i--) {
+        const p = confettiParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.18;
+        p.rotation += p.vRot;
+        p.alpha -= 0.009;
+        if (p.alpha <= 0 || p.y > confettiCanvas.height + 30) {
+          confettiParticles.splice(i, 1);
+          continue;
+        }
+        confettiCtx.save();
+        confettiCtx.globalAlpha = Math.max(0, p.alpha);
+        confettiCtx.translate(p.x, p.y);
+        confettiCtx.rotate((p.rotation * Math.PI) / 180);
+        confettiCtx.fillStyle = p.color;
+        confettiCtx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.65);
+        confettiCtx.restore();
+      }
+      requestAnimationFrame(animateCanvases);
+    }
+
+    window.addEventListener('resize', resizeCanvases);
+    resizeCanvases();
+    animateCanvases();
+    renderAll();
+  </script>
+</body>
+</html>
